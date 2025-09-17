@@ -1,0 +1,10 @@
+1)SELECT id, name, salary FROM employees WHERE salary = (SELECT MIN(salary) FROM employees);
+2)SELECT id, product_name, price FROM products WHERE price > (SELECT AVG(price) FROM products);
+3)SELECT e.id, e.name, e.department_id FROM employees e JOIN departments d ON e.department_id = d.id WHERE d.department_name = 'Sales';
+4)SELECT c.customer_id, c.name FROM customers c LEFT JOIN orders o ON c.customer_id = o.customer_id WHERE o.order_id IS NULL;
+5)SELECT p.id, p.product_name, p.price, p.category_id FROM products p JOIN (SELECT category_id, MAX(price) AS max_price FROM products GROUP BY category_id) m ON p.category_id = m.category_id AND p.price = m.max_price;
+6)SELECT e.id, e.name, e.salary, e.department_id FROM employees e JOIN (SELECT department_id FROM employees GROUP BY department_id ORDER BY AVG(salary) DESC LIMIT 1) d ON e.department_id = d.department_id;
+7)SELECT e.id, e.name, e.salary, e.department_id FROM employees e JOIN (SELECT department_id, AVG(salary) avg_salary FROM employees GROUP BY department_id) d ON e.department_id = d.department_id WHERE e.salary > d.avg_salary;
+8)SELECT s.student_id, s.name, g.course_id, g.grade FROM students s JOIN grades g ON s.student_id = g.student_id JOIN (SELECT course_id, MAX(grade) max_grade FROM grades GROUP BY course_id) mg ON g.course_id = mg.course_id AND g.grade = mg.max_grade;
+9)SELECT id, product_name, price, category_id FROM (SELECT *, DENSE_RANK() OVER (PARTITION BY category_id ORDER BY price DESC) AS rnk FROM products) sub WHERE rnk = 3;
+10)SELECT * FROM employees WHERE salary > (SELECT AVG(salary) FROM employees) AND salary < (SELECT MAX(salary) FROM employees e2 WHERE e2.department_id = employees.department_id);
